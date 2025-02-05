@@ -71,7 +71,7 @@ def enregistrer_client():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    # Exécution de la requête SQL pour insérer un nouveau client
+    # Exécution de la requête SQL pourk insérer un nouveau client
     cursor.execute('INSERT INTO clients (created, nom, prenom, adresse) VALUES (?, ?, ?, ?)', (1002938, nom, prenom, "ICI"))
     conn.commit()
     conn.close()
