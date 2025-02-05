@@ -58,6 +58,22 @@ def ReadBDD():
     conn.close()
     return render_template('read_data.html', data=data)
 
+@app.route('/fiche_nom/<string:nom>', methods=['GET'])
+def fiche_nom(nom):
+    # Connexion à la base de données
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    
+    # Requête SQL pour chercher un client par son nom
+    cursor.execute("SELECT * FROM clients WHERE nom = ?", (nom,))
+    client = cursor.fetchone()
+    
+    # Vérification si un client a été trouvé
+    if client:
+        return render_template('fiche_client.html', client=client)
+    else:
+        return f"Aucun client trouvé avec le nom {nom}.", 404
+
 @app.route('/enregistrer_client', methods=['GET'])
 def formulaire_client():
     return render_template('formulaire.html')  # afficher le formulaire
