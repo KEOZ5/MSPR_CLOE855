@@ -13,7 +13,7 @@ def est_authentifie():
 def log_connexion(username, ip_address):
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute('''
+    cursor.execute(''' 
     INSERT INTO logs_connexions (username, ip_address) VALUES (?, ?)
     ''', (username, ip_address))
     conn.commit()
@@ -88,6 +88,22 @@ def enregistrer_client():
     conn.commit()
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
+
+# Nouvelle route pour rechercher un client par son nom
+@app.route('/fiche_nom/<string:nom>', methods=['GET'])
+def fiche_nom(nom):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    
+    # Recherche du client par nom dans la base de données (utilisation de LIKE pour recherche partielle)
+    cursor.execute("SELECT * FROM clients WHERE nom LIKE ?", ('%' + nom + '%',))
+    client = cursor.fetchall()
+    conn.close()
+
+    if client:
+        return render_template('read_data.html', data=client)  # Afficher les résultats dans le template
+    else:
+        return f"Aucun client trouvé avec le nom {nom}.", 404  # Si aucun client n'est trouvé
 
 if __name__ == "__main__":
     app.run(debug=True)
